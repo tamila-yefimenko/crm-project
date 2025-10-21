@@ -20,13 +20,24 @@ export default async function Page({}: PageProps) {
           </>
         }
       >
-        {data.map(({ id, title, companyTitle, discount }) => (
-          <tr key={id}>
-            <SummaryTableCell>{companyTitle}</SummaryTableCell>
-            <SummaryTableCell>{title}</SummaryTableCell>
-            <SummaryTableCell align="center">{`-${discount}%`}</SummaryTableCell>
-          </tr>
-        ))}
+        {data
+          .map(({ id, title, companyTitle, discount }) => ({
+            id,
+            companyTitle: companyTitle.includes('Invalid faker method')
+              ? 'Unknown Company'
+              : companyTitle,
+            title: title.includes('Invalid faker method')
+              ? 'Untitled Promotion'
+              : title,
+            discount: isNaN(Number(discount)) ? 0 : discount,
+          }))
+          .map(({ id, title, companyTitle, discount }) => (
+            <tr key={id}>
+              <SummaryTableCell>{companyTitle}</SummaryTableCell>
+              <SummaryTableCell>{title}</SummaryTableCell>
+              <SummaryTableCell align="center">{`-${discount}%`}</SummaryTableCell>
+            </tr>
+          ))}
       </SummaryTable>
     </DashboardCard>
   );
