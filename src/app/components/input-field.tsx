@@ -1,14 +1,21 @@
 'use client';
 
-import { Field } from 'formik';
+import React from 'react';
+import { Field, FieldAttributes } from 'formik';
 
 export interface InputFieldProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
+  extends FieldAttributes<any>,
+    React.InputHTMLAttributes<HTMLInputElement | HTMLSelectElement> {
   label?: string;
-  id?: string;
+  as?: React.ElementType;
 }
 
-export default function InputField({ label, id, ...rest }: InputFieldProps) {
+export default function InputField({
+  label,
+  id,
+  as,
+  ...rest
+}: InputFieldProps) {
   return (
     <div className="flex flex-col">
       {label && (
@@ -19,6 +26,7 @@ export default function InputField({ label, id, ...rest }: InputFieldProps) {
       <Field
         {...rest}
         id={id}
+        as={as}
         className="p-3 h-11 text-sm rounded border border-gray-300 shadow"
       />
     </div>

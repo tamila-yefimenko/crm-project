@@ -64,6 +64,7 @@ const stringifyQueryParams = (params: Record<string, string>) =>
 
 const sendRequest = async <T>(url: string, init?: RequestInit) => {
   const res = await fetch(url, init);
+  if (res.status === 404) return [] as unknown as T;
   if (!res.ok) {
     throw new Error(await res.text());
   }
@@ -103,4 +104,30 @@ export const getPromotions = async (
     `${buildUrl('promotions')}?${stringifyQueryParams(params)}`,
     init
   );
+};
+
+export const createCompany = async (
+  data: Omit<Company, 'id' | 'hasPromotions'>
+) => {
+  const init: RequestInit = {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {
+      'content-type': 'application/json',
+    },
+  };
+
+  return sendRequest<Company>(buildUrl('companies'), init);
+};
+
+export const createPromotion = async (data: Omit<Promotion, 'id'>) => {
+  const init: RequestInit = {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {
+      'content-type': 'application/json',
+    },
+  };
+
+  return sendRequest<Promotion>(buildUrl('promotions'), init);
 };
