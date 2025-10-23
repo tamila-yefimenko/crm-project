@@ -1,4 +1,5 @@
 import React from 'react';
+import { SearchProvider } from '@/context/search-context';
 
 export interface LayoutProps {
   children: React.ReactNode;
@@ -15,12 +16,14 @@ export default function Layout({
 }: LayoutProps) {
   return (
     <>
-      {modal}
-      {header}
-      <main>
-        {toolbar}
-        {children}
-      </main>
+      <SearchProvider>
+        {modal}
+        {header}
+        <main>
+          {toolbar}
+          {children}
+        </main>
+      </SearchProvider>
     </>
   );
 }

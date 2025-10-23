@@ -4,6 +4,7 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getCompanies } from '@/lib/api';
 import CompanyRow from '@/app/components/company-row';
+import { useSearch } from '@/context/search-context';
 
 export interface CompanyTableProps {}
 
@@ -17,11 +18,17 @@ const headers = [
 ];
 
 export default function CompanyTable({}: CompanyTableProps) {
+  const { searchTerm } = useSearch();
+
   const { data } = useQuery({
     queryKey: ['companies'],
     queryFn: () => getCompanies(),
     staleTime: 10 * 1000,
   });
+
+  const filteredData = data?.filter((company) =>
+    company.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="py-8 px-10 bg-gray-100">
@@ -36,7 +43,7 @@ export default function CompanyTable({}: CompanyTableProps) {
           </tr>
         </thead>
         <tbody>
-          {data?.map((company) => (
+          {filteredData?.map((company) => (
             <CompanyRow key={company.id} company={company} />
           ))}
         </tbody>
